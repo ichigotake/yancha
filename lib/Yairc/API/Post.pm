@@ -20,25 +20,25 @@ sub run {
     }
 
     my $text = '';
-    unless ( $text = encode('utf8', $req->param('text')) ) {
+    unless ( $text = decode_utf8 $req->param('text') ) {
         return $self->response({}, 400);
     }
 
-    my $tags = [];
-    unless ( $tags = [ $self->sys->extract_tags_from_text( $text ) ] ) {
-        $tags = ['PUBLIC'];
+    my @tags;
+    unless ( @tags = $self->sys->extract_tags_from_text( $text ) ) {
+        @tags = ('PUBLIC');
     }
 
     my $post = {
         text => $text,
-        tags => $tags,
+        tags => \@tags,
     };
 
     unless ( $post = $self->sys->data_storage->add_post( $post, $user ) ) {
         return $self->response({}, 400);
     }
 
-    $self->sys->send_post_to_tag_joined( $post, $tags );
+    $self->sys->send_post_to_tag_joined( $post, \@tags );
 
     return $self->response({}, 200);
 }
