@@ -83,8 +83,10 @@ sub make_post {
 sub search_twitter {
     my ($self, $word) = @_;
 
+    my $words = ref $word ? $word : [$word];
+    my $query = join(' OR ', @$words);
     my $endpoint = 'http://search.twitter.com/search.json?q=';
-    $endpoint .= url_encode_utf8($word);
+    $endpoint .= url_encode_utf8($query);
 
     my $res = $self->ua->get( $endpoint );
 
@@ -121,7 +123,7 @@ Yancha::Client::Tweet2Yancha - post to Yancha from Twitter search. Yet another n
     );
 
     my @keywords = qw/hachojipm ltthon/; # OR検索
-    my $posts = $client->search_twitter( @keywords );
+    my $posts = $client->search_twitter( \@keywords );
     foreach my $post( @{ $posts } ) {
         next if ($client->is_retweet($post->{ text }));
         $yancha->yancha_post( $post );
@@ -167,7 +169,7 @@ Default: 'TWITTER'
 
 =back
 
-=item my $content = $twitori->twitter_search(@keyword)
+=item my $content = $twitori->twitter_search(\@keyword)
 
 Twitterのキーワード検索APIの取得結果を配列で返します。
 

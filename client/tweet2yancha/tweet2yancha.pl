@@ -32,7 +32,7 @@ my $timer; $timer = AnyEvent->timer(
     after    => 0,
     interval => 5,
     cb       => sub {
-            my $content = $yancha->search_twitter( 'test' );
+            my $content = $yancha->search_twitter( ['test', 'hachioji'] );
             if ( $id && $content ) {
                 for my$res( @{ $content->{ results } } ) {
                     last if ($id >= $res->{ id });
