@@ -65,7 +65,6 @@ sub yancha_post {
     };
 
     my $endpoint = $self->{ yancha_url } . $self->{ api_endpoint };
-    warn $endpoint;
     my $req = POST($endpoint, $param);
     my $res = $self->ua->request( $req );
 }
