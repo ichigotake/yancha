@@ -233,21 +233,39 @@ socket.on('token login', function(res){
 
 });
 
+//サーバーのデフォルトタグを取得
+function getDefaultTags() {
+  var tag_list = new Array();
+  $.ajax({
+    type: 'POST',
+    async: false,
+    url: getHostRootURL()+"/api/data",
+    data: {
+        default_tag: 1,
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown){
+      console.log(textStatus);
+    },
+    success: (function(data){
+      for (var i in data) {
+        tag_list.push(data[i]);
+      }
+    }),
+    dataType: 'json'
+  });
+  return tag_list;
+}
+
+
 //タグ登録処理完了イベント
 socket.on('join tag', function(tags){
   $('#tags').empty();
   for (var i in tags) {
     $('#tags').append(
-      $('<b class="tagcell">')
+      $('<b class="tagcell" id="tag-' + i + '">')
         .attr('data-tag-name', i)
         .append( 
-          i, 
-          "&nbsp;", 
-          $('<a href="javascript:return void();" style="text-decoration:none;">X</a>')
-            .on('click', function(e){
-              e.stopPropagation();
-              removeTag($(e.target).parent().attr('data-tag-name'));
-            })
+          i 
       ).on('click', function(e){
         var elm = $(e.target);
         var tag = elm.attr('data-tag-name');
@@ -259,6 +277,27 @@ socket.on('join tag', function(tags){
         tagRefresh();
       })
     );
+    
+    var default_tags = getDefaultTags();
+    var is_default_tag = false;
+    for (var tag_index in default_tags) {
+      if (i == default_tags[tag_index]) {
+        is_default_tag = true;
+      }
+    }
+
+    if (is_default_tag === false) {
+          $('#tag-' + i)
+          .append(
+            "&nbsp;", 
+            $('<a href="javascript:return void();" style="text-decoration:none;">X</a>')
+              .on('click', function(e){
+                e.stopPropagation();
+                removeTag($(e.target).parent().attr('data-tag-name'));
+            })
+        );
+    }
+
   }
   $(window).resize();
 

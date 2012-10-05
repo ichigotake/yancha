@@ -128,6 +128,21 @@ sub add_or_replace_user {
     return $_user;
 }
 
+sub get_server_tags {
+    my ( $self ) = @_;
+    my ($sql, @binds) = $self->{sql_maker}->select('post', ['tags'], {});
+    my $sth = $self->dbh->prepare( $sql );
+    $sth->execute( @binds );
+    
+    my %tags;
+    while ( my $row = $sth->fetchrow_hashref ) {
+        my $tag = $row->{ tags };
+        ++$tags{ $tag } while ( $tag =~ m/ (\w+) /g );
+    }
+
+    return \%tags;
+}
+
 sub remove_user {
     my ( $self, $user ) = @_;
     my $userkey = $user->{ user_key };

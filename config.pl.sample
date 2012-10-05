@@ -39,6 +39,7 @@ use strict;
             ],
         },
         api_endpoint => {
+            '/api/data'    => [ 'Yancha::API::Data'   => {} => 'サーバーデータ取得用api' ],
             '/api/post'    => [ 'Yancha::API::Post'   => {} => 'user message投稿用api' ],
             '/api/search'  => [ 'Yancha::API::Search' => {} => 'user message検索用api' ],
             '/api/user'    => [ 'Yancha::API::User'   => {} => 'user data取得用api' ],
