@@ -24,6 +24,10 @@ margin:0px;
 }
 
 
+#messages {
+  margin-bottom:2.2em;
+  overflow-y:auto;
+}
 #messages div.messagecell{
   font-size: 12px;
   background: #eeeeee;
@@ -94,12 +98,17 @@ margin:0px;
   background: gray;
 }
 
+#send-message {
+  position:fixed;
+    bottom:0;
+  background-color:#FFF;
+}
 #send-message textarea {
   border: 1px solid gray;
   height: 1.4em;
   margin-right:15px;
   padding: 5px 0px;
-  line-height: 1.2em;
+  line-height: 2.5em;
   vertical-align: middle;
   width: 100%;
   -webkit-border-radius: 10px;
